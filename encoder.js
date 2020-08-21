@@ -1,19 +1,32 @@
-//1-M; 16
-const nBits = 16 * 8;
+//Ajustar caracteres de input en función de los parametros de entrada
 
-let encodedMsg = {
-    original: "",
-    mode: "",
-    count: "",
-    data: "",
-}
 
-function encode(message) {
-    let data;
+let _vercor = "";
+function encode(message, version, correction, mask) {
+    _vercor = version + "-" + correction;
+
+    let encodedMsg = {
+        original: "",
+        mode: "",
+        modeText: "",
+        count: "",
+        data: "",
+        mask: 0,
+        version: "",
+        correction: ""
+    }
+
     let encoded;
+    let nBits = retrieveNBits();
 
     encodedMsg.original = message;
+    encodedMsg.version = version;
+    encodedMsg.correction = correction;
+    encodedMsg.mask = mask;
     mode = determineEncodig(message);
+
+    encodedMsg.modeText = mode;
+
     encodedMsg.mode = MODE[mode];
     encodedMsg.count = charCountIndicator(mode, message);
 
@@ -25,57 +38,111 @@ function encode(message) {
         encoded = byteEncoding(message);
     }
 
-    data = encodedMsg.mode + encodedMsg.count + encoded.join("");
+    //console.log(encoded.join(""));
 
-    data = addPadding(data);
+    let data = encodedMsg.mode + encodedMsg.count + encoded.join("");
 
-    let corrCodeWords = toDec8(data);
+    data = addPadding(data, nBits);
+
+    let polynomial = calcPolynomial(data);
+    let corrCodeWords = polyDiv(polynomial.terms, polynomial.exps);
+
     let corrCodeBin = "";
 
-    for(let i = 0; i<corrCodeWords.length; i++){
-        corrCodeBin += toBin(corrCodeWords[i],8);
+    for (let i = 0; i < corrCodeWords.length; i++) {
+        corrCodeBin += toBin(corrCodeWords[i], 8);
     }
 
     encodedMsg.data = data + corrCodeBin;
 
+    //console.log(encodedMsg)
+
     return encodedMsg;
 }
 
-function toDec8(nums) {
-    let terms = [];
-    let exps = [];
+function retrieveNBits() {
+    return 8 * CORRECTIONTABLE[_vercor];
+}
+
+function calcPolynomial(nums) {
+    let polynomial = {
+        terms: [],
+        exps: []
+    }
+
     number = Array.from(nums);
 
     while (number.length > 0) {
-        terms.push(parseInt(number.splice(0, 8).join(""), 2));
+        polynomial.terms.push(parseInt(number.splice(0, 8).join(""), 2));
     }
 
-    let pos = terms.length;
+    let pos = polynomial.terms.length;
 
     while (pos > 0) {
         pos--;
-        exps.push(pos);
+        polynomial.exps.push(pos);
     }
 
-    return polyDiv(terms, exps);
+    return polynomial;
 }
 
+function getGeneratorPolynomial(num) {
+    let generatorPolynomial = {
+        alphaExp: [],
+        xExp: []
+    }
+    switch (num) {
+        case 7:
+            generatorPolynomial.alphaExp = [0, 87, 229, 146, 149, 238, 102, 21];
+            break;
+        case 10:
+            generatorPolynomial.alphaExp = [0, 251, 67, 46, 61, 118, 70, 64, 94, 32, 45];
+            break;
+        case 13:
+            generatorPolynomial.alphaExp = [0, 74, 152, 176, 100, 86, 100, 106, 104, 130, 218, 206, 140, 78];
+            break;
+        case 15:
+            generatorPolynomial.alphaExp = [0, 8, 183, 61, 91, 202, 37, 51, 58, 58, 237, 140, 124, 5, 99, 105];
+            break;
+        case 16:
+            generatorPolynomial.alphaExp = [0, 120, 104, 107, 109, 102, 161, 76, 3, 91, 191, 147, 169, 182, 194, 225, 120];
+            break;
+        case 17:
+            generatorPolynomial.alphaExp = [0, 43, 139, 206, 78, 43, 239, 123, 206, 214, 147, 24, 99, 150, 39, 243, 163, 136];
+            break;
+        case 18:
+            generatorPolynomial.alphaExp = [0, 215, 234, 158, 94, 184, 97, 118, 170, 79, 187, 152, 148, 252, 179, 5, 98, 96, 153];
+            break;
+        case 22:
+            generatorPolynomial.alphaExp = [0, 210, 171, 247, 242, 93, 230, 14, 109, 221, 53, 200, 74, 8, 172, 98, 80, 219, 134, 160, 105, 165, 231];
+            break;
+        case 26:
+            generatorPolynomial.alphaExp = [0, 173, 125, 158, 2, 103, 182, 118, 17, 145, 201, 111, 28, 165, 53, 161, 21, 245, 142, 13, 102, 48, 227, 153, 145, 218, 70];
+            break;
+        case 28:
+            generatorPolynomial.alphaExp = [0, 168, 223, 200, 104, 224, 234, 108, 180, 110, 190, 195, 147, 205, 27, 232, 201, 21, 43, 245, 87, 42, 195, 212, 119, 242, 37, 9, 123];
+            break;
+
+        //añadir las que faltan para ECCODEWORDS
+    }
+
+
+    for (let i = num; i > 0; i--) {
+        generatorPolynomial.xExp.push(i);
+    }
+
+    return generatorPolynomial;
+}
 
 function polyDiv(terms, exps) {
-    // 1-M: 10 correction level
-    const initialAlphaExp = [0, 251, 67, 46, 61, 118, 70, 64, 94, 32, 45];
-    let alphaExp = [0, 251, 67, 46, 61, 118, 70, 64, 94, 32, 45]; //10 correction level
-    let xExp = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+    const iterations = terms.length - 1;
+    const genPolynomial = getGeneratorPolynomial(ECCODEWORDS[_vercor]);
 
-    // 1-Q: 13 correction level
-    // const initialAlphaExp = [0, 74, 152, 176, 100, 86, 100, 106, 104, 130, 218, 206, 140, 78];
-    // let alphaExp = [0, 74, 152, 176, 100, 86, 100, 106, 104, 130, 218, 206, 140, 78];
-    // let xExp = [13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
-
-
+    let alphaExp = Array.from(genPolynomial.alphaExp);
+    let xExp = Array.from(genPolynomial.xExp);
 
     for (let i = 0; i < exps.length; i++) {
-        exps[i] = exps[i] + 10;
+        exps[i] = exps[i] + ECCODEWORDS[_vercor];
     }
 
     let adjust = exps[0] - xExp[0];
@@ -84,10 +151,10 @@ function polyDiv(terms, exps) {
         xExp[i] = xExp[i] + adjust;
     }
 
-    let res = multXOR(terms, exps, initialAlphaExp, xExp);
+    let res = multXOR(terms, exps, alphaExp, xExp);
 
-    for (let i = 0; i < 15; i++) {
-        res = multXOR(res[0], res[3], initialAlphaExp, res[3]);
+    for (let i = 0; i < iterations; i++) {
+        res = multXOR(res[0], res[3], alphaExp, res[3]);
     }
 
     return res[0];
@@ -99,7 +166,6 @@ function multXOR(terms, exps, inAlphaExp, xExp) {
     let alphaNum = [];
     newAlpha = ANTILOGTABLE[terms[0]];
 
-
     for (let i = 0; i < alphaExp.length; i++) {
         alphaExp[i] += newAlpha;
         if (alphaExp[i] > 255) {
@@ -109,7 +175,7 @@ function multXOR(terms, exps, inAlphaExp, xExp) {
     }
 
     let temp = [];
-    let max = 10+1;
+    let max = ECCODEWORDS[_vercor] + 1;
 
     if (terms.length > max) {
         max = terms.length;
@@ -128,7 +194,7 @@ function multXOR(terms, exps, inAlphaExp, xExp) {
     }
 
     terms = temp;
-    if (terms.length > 10) {
+    if (terms.length > ECCODEWORDS[_vercor]) {
         terms.splice(0, 1);
     }
 
@@ -145,7 +211,7 @@ function multXOR(terms, exps, inAlphaExp, xExp) {
 }
 
 
-function addPadding(data) {
+function addPadding(data, nBits) {
     let left = nBits - data.length;
     let pad = 4 - left;
 
@@ -166,7 +232,12 @@ function addPadding(data) {
 
 function isMult8(num) {
     let rem = num.length % 8;
-    return num.padEnd(num.length + 8 - rem, "0");
+    if (rem > 0) {
+        return num.padEnd(num.length + 8 - rem, "0");
+    }
+
+    return num;
+
 }
 
 function determineEncodig(message) {
@@ -188,7 +259,7 @@ function isNumeric(message) {
 
 function isAlphanumeric(message) {
     for (let i = 0; i < message.length; i++) {
-        if (!CONVERSIONTABLE[message[i]]) {
+        if (CONVERSIONTABLE[message[i]] == undefined) {
             return false;
         }
     }

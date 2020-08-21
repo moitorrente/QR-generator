@@ -1,24 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="ISO-8859-1">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src='encoder.js'></script>
+    <script defer src='encoder.js'></script>
     <script src='tables.js'></script>
     <script defer src='script.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/style.css">
+
 
 </head>
+
 <body>
+
     <body>
-        <div>
-            <label for="data">Datos a convertir:</label>
-            <input type="text" id="data" name="data">
+        <nav class="navbar navbar-dark bg-dark">
+            <span class="navbar-brand mb-0 h1">Generador de códigos QR</span>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Datos a convertir</span>
+                            </div>
+                            <textarea class="form-control" aria-label="Datos" id="data"></textarea>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="correction">Nivel de corrección:</label>
+                            </div>
+                            <select class="custom-select" id="correction">
+                                <option value="L">Low</option>
+                                <option value="M">Medium</option>
+                                <option value="Q">Quartile</option>
+                                <option value="H">High</option>
+                            </select>
+                        </div>
+
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="version">Versión:</label>
+                            </div>
+                            <select class="custom-select" id="version">
+                                <option value=1>1</option>
+                                <option value=2>2</option>
+                                <option value=3>3</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="maskNum">Máscara:</label>
+                            </div>
+                            <select class="custom-select" id="maskNum">
+                                <option value=0>0</option>
+                                <option value=1>1</option>
+                                <option value=2>2</option>
+                                <option value=3>3</option>
+                                <option value=4>4</option>
+                                <option value=5>5</option>
+                                <option value=6>6</option>
+                                <option value=7>7</option>
+                            </select>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="shape">Forma:</label>
+                            </div>
+                            <select class="custom-select" id="shape">
+                                <option value="square">Cuadrados</option>
+
+                                <option value="rounded-square">Cuadrados redondeados</option>
+                                <option value="circle">Circulos</option>
+                            </select>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="mainColor">Color:</label>
+                            </div>
+                            <input class="form-control" type="color" value="#000000" id="mainColor">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="size">Tamaño</label>
+                            </div>
+                            <input type="range" class="custom-range custom-select" id="size">
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-md-5">
+                    <div class="row d-flex justify-content-center" id="canvas">
+                        <script defer src="sketch.js"></script>
+                    </div>
+
+                </div>
+                <div class="col-md-4">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-header">
+                            Datos
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item" id="modeText">Modo:</li>
+                            <li class="list-group-item" id="correctionText">Corrección:</li>
+                            <li class="list-group-item" id="versionText">Versión:</li>
+                            <li class="list-group-item" id="maskText">Máscara:</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
-        <div>
-            <script src="sketch.js"></script>
-        </div>
-      </body>
     </body>
+</body>
+
 </html>
