@@ -1,8 +1,5 @@
-//Ajustar caracteres de input en función de los parametros de entrada
-
-
 let _vercor = "";
-function encode(message, version, correction, mask) {
+function encode(message, version, correction) {
     _vercor = version + "-" + correction;
 
     let encodedMsg = {
@@ -11,7 +8,6 @@ function encode(message, version, correction, mask) {
         modeText: "",
         count: "",
         data: "",
-        mask: 0,
         version: "",
         correction: ""
     }
@@ -22,7 +18,6 @@ function encode(message, version, correction, mask) {
     encodedMsg.original = message;
     encodedMsg.version = version;
     encodedMsg.correction = correction;
-    encodedMsg.mask = mask;
     mode = determineEncodig(message);
 
     encodedMsg.modeText = mode;
@@ -38,7 +33,6 @@ function encode(message, version, correction, mask) {
         encoded = byteEncoding(message);
     }
 
-    //console.log(encoded.join(""));
 
     let data = encodedMsg.mode + encodedMsg.count + encoded.join("");
 
@@ -54,8 +48,6 @@ function encode(message, version, correction, mask) {
     }
 
     encodedMsg.data = data + corrCodeBin;
-
-    //console.log(encodedMsg)
 
     return encodedMsg;
 }
@@ -122,8 +114,6 @@ function getGeneratorPolynomial(num) {
         case 28:
             generatorPolynomial.alphaExp = [0, 168, 223, 200, 104, 224, 234, 108, 180, 110, 190, 195, 147, 205, 27, 232, 201, 21, 43, 245, 87, 42, 195, 212, 119, 242, 37, 9, 123];
             break;
-
-        //añadir las que faltan para ECCODEWORDS
     }
 
 
@@ -227,6 +217,7 @@ function addPadding(data, nBits) {
     if (left > 0) {
         data = data.padEnd(data.length + left, "1110110000010001");
     }
+
     return data;
 }
 
@@ -254,7 +245,7 @@ function determineEncodig(message) {
 }
 
 function isNumeric(message) {
-    return !isNaN(message);
+    return /^-?\d+$/.test(message);
 }
 
 function isAlphanumeric(message) {

@@ -90,7 +90,75 @@ const FORMATINFORMATION = {
         Q: "010101111101101",
         H: "000100000111011"
     }
+}
 
+const CAPACITIES= {
+    1:{
+        L:{
+            numeric: 41,
+            alphanumeric: 25,
+            byte: 17
+        },
+        M:{
+            numeric: 34,
+            alphanumeric: 20,
+            byte: 14
+        },
+        Q:{
+            numeric: 27,
+            alphanumeric: 16,
+            byte: 11
+        },
+        H:{
+            numeric: 17,
+            alphanumeric: 10,
+            byte: 7
+        }
+    },
+    2:{
+        L:{
+            numeric: 77,
+            alphanumeric: 47,
+            byte: 32
+        },
+        M:{
+            numeric: 63,
+            alphanumeric: 38,
+            byte: 26
+        },
+        Q:{
+            numeric: 48,
+            alphanumeric: 29,
+            byte: 20
+        },
+        H:{
+            numeric: 34,
+            alphanumeric: 20,
+            byte: 14
+        }
+    },
+    3:{
+        L:{
+            numeric: 127,
+            alphanumeric: 77,
+            byte: 53
+        },
+        M:{
+            numeric: 101,
+            alphanumeric: 61,
+            byte: 42
+        },
+        Q:{
+            numeric: 77,
+            alphanumeric: 47,
+            byte: 32
+        },
+        H:{
+            numeric: 58,
+            alphanumeric: 35,
+            byte: 24
+        }
+    }
 }
 
 const FORMATINFORMATION0 = {

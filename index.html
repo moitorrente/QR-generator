@@ -4,17 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script defer src='encoder.js'></script>
-    <script src='tables.js'></script>
-    <script defer src='script.js'></script>
+    <title>QR</title>
+    <script defer src='../src/encoder.js'></script>
+    <script src='../src/tables.js'></script>
+    <script defer src='../src/script.js'></script>
+    <script defer src='../src/Spot.js'></script>
+    <script defer src='../src/mask.js'></script>
+    <script defer src='../src/place.js'></script>
+    <script defer src='../src/evaluation.js'></script>
+    <script defer src='../src/utils.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/style.css">
-
-
 </head>
 
 <body>
@@ -29,99 +32,134 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">Datos a convertir</span>
+                        <div id="inputArea" class="p-3 border rounded">
+                            <h6 class="card-subtitle mb-2 text-muted">Parámetros entrada</h6>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputChars">
+                                        Datos a convertir <br>
+                                    </span>
+                                </div>
+                                <textarea class="form-control" aria-label="Datos" id="data"></textarea>
                             </div>
-                            <textarea class="form-control" aria-label="Datos" id="data"></textarea>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="correction">Nivel de corrección</label>
+                                </div>
+                                <select class="custom-select" id="correction">
+                                    <option value="L">Low</option>
+                                    <option value="M">Medium</option>
+                                    <option value="Q">Quartile</option>
+                                    <option value="H">High</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="version">Versión</label>
+                                </div>
+                                <select class="custom-select" id="version">
+                                    <option value=1>1</option>
+                                    <option value=2>2</option>
+                                    <option value=3>3</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="correction">Nivel de corrección:</label>
-                            </div>
-                            <select class="custom-select" id="correction">
-                                <option value="L">Low</option>
-                                <option value="M">Medium</option>
-                                <option value="Q">Quartile</option>
-                                <option value="H">High</option>
-                            </select>
-                        </div>
+                        <div id="formatArea" class="p-3 border rounded mt-3 mb-3">
+                            <h6 class="card-subtitle mb-2 text-muted">Formato QR</h6>
 
-
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="version">Versión:</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="maskNum">Máscara</label>
+                                </div>
+                                <select class="custom-select" id="maskNum">
+                                    <option value="auto">Auto</option>
+                                    <option value=0>0</option>
+                                    <option value=1>1</option>
+                                    <option value=2>2</option>
+                                    <option value=3>3</option>
+                                    <option value=4>4</option>
+                                    <option value=5>5</option>
+                                    <option value=6>6</option>
+                                    <option value=7>7</option>
+                                </select>
                             </div>
-                            <select class="custom-select" id="version">
-                                <option value=1>1</option>
-                                <option value=2>2</option>
-                                <option value=3>3</option>
-                            </select>
-                        </div>
 
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="maskNum">Máscara:</label>
-                            </div>
-                            <select class="custom-select" id="maskNum">
-                                <option value=0>0</option>
-                                <option value=1>1</option>
-                                <option value=2>2</option>
-                                <option value=3>3</option>
-                                <option value=4>4</option>
-                                <option value=5>5</option>
-                                <option value=6>6</option>
-                                <option value=7>7</option>
-                            </select>
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="shape">Forma:</label>
-                            </div>
-                            <select class="custom-select" id="shape">
-                                <option value="square">Cuadrados</option>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="shape">Forma</label>
+                                </div>
+                                <select class="custom-select" id="shape">
+                                    <option value="square">Cuadrados</option>
 
-                                <option value="rounded-square">Cuadrados redondeados</option>
-                                <option value="circle">Circulos</option>
-                            </select>
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="mainColor">Color:</label>
+                                    <option value="rounded-square">Cuadrados redondeados</option>
+                                    <option value="circle">Circulos</option>
+                                    <option value="grid">Grid</option>
+                                </select>
                             </div>
-                            <input class="form-control" type="color" value="#000000" id="mainColor">
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <label class="input-group-text" for="size">Tamaño</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="mainColor">Color</label>
+                                </div>
+                                <input class="form-control" type="color" value="#000000" id="mainColor">
                             </div>
-                            <input type="range" class="custom-range custom-select" id="size">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="size">Tamaño</label>
+                                </div>
+                                <input type="range" class="custom-range custom-select" id="size">
+                            </div>
+                            <form>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Nombre fichero"
+                                        id="fileDownloadName" required>
+                                    <select class="custom-select" id="fileDownloadExtension" style="max-width: 5em;">
+                                        <option value="0" selected>.jpg</option>
+                                        <option value="1">.png</option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-outline-primary" id="downloadButton">
+                                            <svg class="bi bi-download" width="1em" height="1em" viewBox="0 0 16 16"
+                                                fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M.5 8a.5.5 0 0 1 .5.5V12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5a.5.5 0 0 1 1 0V12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V8.5A.5.5 0 0 1 .5 8z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M5 7.5a.5.5 0 0 1 .707 0L8 9.793 10.293 7.5a.5.5 0 1 1 .707.707l-2.646 2.647a.5.5 0 0 1-.708 0L5 8.207A.5.5 0 0 1 5 7.5z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M8 1a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0v-8A.5.5 0 0 1 8 1z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-
-                    </div>
-
-                </div>
-                <div class="col-md-5">
-                    <div class="row d-flex justify-content-center" id="canvas">
-                        <script defer src="sketch.js"></script>
                     </div>
 
                 </div>
                 <div class="col-md-4">
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-header">
-                            Datos
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item" id="modeText">Modo:</li>
-                            <li class="list-group-item" id="correctionText">Corrección:</li>
-                            <li class="list-group-item" id="versionText">Versión:</li>
-                            <li class="list-group-item" id="maskText">Máscara:</li>
-                        </ul>
+                    <div class="row d-flex justify-content-center" id="canvas">
+                        <script defer src="../src/sketch.js"></script>
                     </div>
+
+                </div>
+                <div class="col-md-4">
+
+                    <div class="row d-flex justify-content-center">
+                        <div class="card m-3" style="width: 18rem;">
+                            <div class="card-header">
+                                Datos
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" id="modeText">Modo:</li>
+                                <li class="list-group-item" id="correctionText">Corrección:</li>
+                                <li class="list-group-item" id="versionText">Versión:</li>
+                                <li class="list-group-item" id="maskText">Máscara:</li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
