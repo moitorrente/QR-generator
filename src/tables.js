@@ -11,6 +11,12 @@ const MATRIX = {
     "3": 29
 }
 
+const REMAINDER = {
+    "1": 0,
+    "2": 7,
+    "3": 7
+}
+
 const CORRECTIONTABLE = {
     "1-L": 19,
     "1-M": 16,

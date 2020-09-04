@@ -30,7 +30,7 @@ window.addEventListener('load', function () {
         correction: "L",
         version: 1
     }
-    place(data, version.value, shape.value, mainColor.value, size.value, maskNum.value);
+    //place(data, version.value, shape.value, mainColor.value, size.value, maskNum.value);
 })
 
 function inputUpdate() {

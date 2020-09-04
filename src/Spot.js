@@ -7,6 +7,7 @@ class Spot {
         this.shape = shape;
         this.mainColor;
         this.editable = true;
+        this.setted = false;
     }
 
     show() {
@@ -19,6 +20,8 @@ class Spot {
 
         } else if (this.set == 2) {
             background = [0, 0, 255];
+        } else if (this.set == 3){
+            background = [255, 0, 0];
         }
         else {
             background = 120;
@@ -49,7 +52,7 @@ class Spot {
 
     checkOver(x, y) {
         if (x < this.x + this.w && x > this.x && y < this.y + this.w && y > this.y) {
-            console.log(this.set);
+            console.log(this);
             return true;
         }
     }
@@ -71,11 +74,15 @@ class Spot {
     setVal(value) {
         if (this.editable) {
             this.set = value;
+            if(this.set == 1 || this.set == 0){
+                this.setted = true;
+            }
         }
     }
 
     lock() {
         this.editable = false;
+        this.setted = true;
     }
 
     unlock() {

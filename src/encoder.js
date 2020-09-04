@@ -47,9 +47,20 @@ function encode(message, version, correction) {
         corrCodeBin += toBin(corrCodeWords[i], 8);
     }
 
-    encodedMsg.data = data + corrCodeBin;
+    const remainderNum = REMAINDER[version];
+
+    encodedMsg.data = data + corrCodeBin + remainderBits(remainderNum);
 
     return encodedMsg;
+}
+
+function remainderBits(num){
+    let rem = "";
+    for (let i = 0; i < num; i++){
+        rem += '0';
+    }
+    return rem;
+
 }
 
 function retrieveNBits() {

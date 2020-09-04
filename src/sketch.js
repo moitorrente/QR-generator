@@ -1,14 +1,12 @@
 let matrix = [];
 let rows = 21;
 let cols = 21;
-
-let dupla = [];
+const NOTSET = 99;
 let x = rows - 1;
 let y = cols - 1;
-let duplaIndex = 0;
-let placeIndex = 0;
-
 let inData = [];
+
+const devmode = document.getElementById("devmode");
 
 function setup() {
     let canvas = createCanvas(420, 420);
@@ -18,7 +16,7 @@ function setup() {
 
     for (let j = 0; j < cols; j++) {
         for (let i = 0; i < rows; i++) {
-            let spot = new Spot(i * w, j * w, w, 0);
+            let spot = new Spot(i * w, j * w, w, NOTSET);
             matrix.push(spot);
         }
     }
@@ -44,8 +42,9 @@ function restart(size) {
     let w = height / rows;
 
     for (let i = 0; i < matrix.length; i++) {
-        matrix[i].setVal(0);
+        matrix[i].setVal(NOTSET);
         matrix[i].updateWidth(w);
+        matrix[i].setted = false;
     }
     x = rows - 1;
     y = cols - 1;
@@ -74,8 +73,6 @@ function place(data, version, shape, mainColor, size, inputMask) {
     restart(size);
     inData = Array.from(data.data)
 
-    placeDataVersion(version);
-
     if (version == 2) {
         alignmentPatterns(16, 16);
     } else if (version == 3) {
@@ -88,9 +85,12 @@ function place(data, version, shape, mainColor, size, inputMask) {
     separators();
     timing();
     darkModule(version);
-    
+    formatBits(parseInt(0), 'L');
+
+    placeGlobal();
+
     let maskToApply;
-    if (inputMask == "auto"){
+    if (inputMask == "auto") {
         let penaltyes = [];
         for (let i = 0; i < 8; i++) {
             formatBits(parseInt(i), data.correction);
@@ -98,10 +98,11 @@ function place(data, version, shape, mainColor, size, inputMask) {
             penaltyes.push(evaluateMask(maskedData));
         }
         maskToApply = findLowestPenalty(penaltyes);
-    } else{
+        console.log("evalua máscara")
+    } else {
         maskToApply = parseInt(inputMask);
     }
-    
+
     formatBits(parseInt(maskToApply), data.correction);
     applyMask(maskToApply);
 
@@ -112,10 +113,6 @@ function place(data, version, shape, mainColor, size, inputMask) {
     }
 
     return maskToApply;
-}
-
-function placeDataVersion(number){
-    window["placeVersion" + number]();
 }
 
 function formatBits(mask, correction) {
