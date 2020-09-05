@@ -1,11 +1,13 @@
 let _vercor = "";
 function encode(message, version, correction) {
-    _vercor = version + "-" + correction;
+    _vercor = `${version}-${correction}`;
+
+    
 
     let encodedMsg = {
         original: "",
         mode: "",
-        modeText: "",
+        modeDescription: "",
         count: "",
         data: "",
         version: "",
@@ -20,19 +22,24 @@ function encode(message, version, correction) {
     encodedMsg.correction = correction;
     mode = determineEncodig(message);
 
-    encodedMsg.modeText = mode;
+    encodedMsg.modeDescription = mode;
 
     encodedMsg.mode = MODE[mode];
     encodedMsg.count = charCountIndicator(mode, message);
 
-    if (mode == "numeric") {
-        encoded = numericEncoding(message);
-    } else if (mode == "alphanumeric") {
-        encoded = alphanumericEncoding(message);
-    } else {
-        encoded = byteEncoding(message);
-    }
+    switch (mode) {
+        case 'numeric':
+            encoded = numericEncoding(message);
+            break;
 
+        case 'alphanumeric':
+            encoded = alphanumericEncoding(message);
+            break;
+
+        default:
+            encoded = byteEncoding(message);
+            break;
+    }
 
     let data = encodedMsg.mode + encodedMsg.count + encoded.join("");
 
@@ -54,9 +61,9 @@ function encode(message, version, correction) {
     return encodedMsg;
 }
 
-function remainderBits(num){
+function remainderBits(num) {
     let rem = "";
-    for (let i = 0; i < num; i++){
+    for (let i = 0; i < num; i++) {
         rem += '0';
     }
     return rem;
@@ -146,7 +153,7 @@ function polyDiv(terms, exps) {
         exps[i] = exps[i] + ECCODEWORDS[_vercor];
     }
 
-    let adjust = exps[0] - xExp[0];
+    const adjust = exps[0] - xExp[0];
 
     for (let i = 0; i < xExp.length; i++) {
         xExp[i] = xExp[i] + adjust;
@@ -169,9 +176,7 @@ function multXOR(terms, exps, inAlphaExp, xExp) {
 
     for (let i = 0; i < alphaExp.length; i++) {
         alphaExp[i] += newAlpha;
-        if (alphaExp[i] > 255) {
-            alphaExp[i] = alphaExp[i] % 255;
-        }
+        if (alphaExp[i] > 255) alphaExp[i] = alphaExp[i] % 255;
         alphaNum[i] = LOGTABLE[alphaExp[i]];
     }
 
@@ -195,9 +200,8 @@ function multXOR(terms, exps, inAlphaExp, xExp) {
     }
 
     terms = temp;
-    if (terms.length > ECCODEWORDS[_vercor]) {
-        terms.splice(0, 1);
-    }
+    if (terms.length > ECCODEWORDS[_vercor]) terms.splice(0, 1);
+
 
     for (let i = 0; i < xExp.length; i++) {
         xExp[i] -= 1;
@@ -213,33 +217,29 @@ function multXOR(terms, exps, inAlphaExp, xExp) {
 
 
 function addPadding(data, nBits) {
-    let left = nBits - data.length;
-    let pad = 4 - left;
+    const MAXPADDING = 4;
 
-    if (pad < 0) {
+    let left = nBits - data.length;
+
+    if (left > 4) {
         data = data.padEnd(data.length + 4, "0");
     } else {
-        data = data.padEnd(data.length + pad, "0");
+        data = data.padEnd(data.length + left, "0");
     }
-
+    
     data = isMult8(data);
     left = nBits - data.length;
 
-    if (left > 0) {
-        data = data.padEnd(data.length + left, "1110110000010001");
-    }
+    if (left > 0) data = data.padEnd(data.length + left, "1110110000010001");
 
     return data;
 }
 
 function isMult8(num) {
     let rem = num.length % 8;
-    if (rem > 0) {
-        return num.padEnd(num.length + 8 - rem, "0");
-    }
-
+    console.log("rem", rem);
+    if (rem > 0) return num.padEnd(num.length + 8 - rem, "0");
     return num;
-
 }
 
 function determineEncodig(message) {
@@ -260,10 +260,8 @@ function isNumeric(message) {
 }
 
 function isAlphanumeric(message) {
-    for (let i = 0; i < message.length; i++) {
-        if (CONVERSIONTABLE[message[i]] == undefined) {
-            return false;
-        }
+    for (const character of message) {
+        if (CONVERSIONTABLE[character] == undefined) return false;
     }
     return true;
 }
@@ -344,8 +342,8 @@ function alphanumericEncoding(text) {
 
 function byteEncoding(text) {
     let encoded = [];
-    for (let i = 0; i < text.length; i++) {
-        encoded.push(toBin(parseInt(toHex(text[i]), 16), 8));
+    for (const character of text) {
+        encoded.push(toBin(parseInt(toHex(character), 16), 8));
     }
     return encoded;
 }

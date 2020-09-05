@@ -106,7 +106,6 @@ function checkNextCol(col, up) {
                 }
             }
         }
-
     } else {
         for (let i = 0; i < rows; i++) {
             if (!matrix[index(col, i, rows)].setted && !matrix[index(col - 1, i, rows)].setted) {

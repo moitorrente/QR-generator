@@ -29,23 +29,21 @@ function draw() {
     angleMode(RADIANS);
     noStroke();
 
-    for (let i = 0; i < matrix.length; i++) {
-        matrix[i].show();
-    }
+    for (const square of matrix) square.show();
 }
 
 function restart(size) {
-    let newSize = mapRange(size, 1, 70, 100, 400);
-
+    const newSize = mapRange(size, 1, 70, 100, 400);
 
     resizeCanvas(newSize, newSize);
     let w = height / rows;
 
-    for (let i = 0; i < matrix.length; i++) {
-        matrix[i].setVal(NOTSET);
-        matrix[i].updateWidth(w);
-        matrix[i].setted = false;
+    for (let square of matrix){
+        square.setVal(NOTSET);
+        square.updateWidth(w);
+        square.setted = false;
     }
+
     x = rows - 1;
     y = cols - 1;
     placeIndex = 0;
@@ -98,7 +96,6 @@ function place(data, version, shape, mainColor, size, inputMask) {
             penaltyes.push(evaluateMask(maskedData));
         }
         maskToApply = findLowestPenalty(penaltyes);
-        console.log("evalua máscara")
     } else {
         maskToApply = parseInt(inputMask);
     }

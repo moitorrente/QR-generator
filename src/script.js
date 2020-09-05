@@ -36,11 +36,11 @@ window.addEventListener('load', function () {
 function inputUpdate() {
     let encodedData = encode(data.value, version.value, correction.value);
     let mask = place(encodedData, version.value, shape.value, mainColor.value, size.value, maskNum.value);
-    modeText.innerHTML = "Modo: " + encodedData.modeText;
+    modeText.innerHTML = "Modo: " + encodedData.modeDescription;
     correctionText.innerHTML = "Corrección: " + encodedData.correction;
     versionText.innerHTML = "Versión: " + encodedData.version;
     maskText.innerHTML = "Máscara: " + mask;
-    let maxChars = determineMaxChars(encodedData.version, encodedData.correction, encodedData.modeText);
+    let maxChars = determineMaxChars(encodedData.version, encodedData.correction, encodedData.modeDescription);
     data.maxLength = maxChars
     inputChars.innerHTML = "Datos a convertir <br> " + determineChars(encodedData.original) + "/" + maxChars;
 }
@@ -50,6 +50,7 @@ function determineChars(text) {
 }
 
 function determineMaxChars(version, correction, mode) {
+    console.log(version, correction, mode)
     return CAPACITIES[version][correction][mode];
 }
 
