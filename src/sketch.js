@@ -6,11 +6,11 @@ let x = rows - 1;
 let y = cols - 1;
 let inData = [];
 
-const devmode = document.getElementById("devmode");
+const devmode = document.getElementById('devmode');
 
 function setup() {
     let canvas = createCanvas(420, 420);
-    canvas.parent("canvas");
+    canvas.parent('canvas');
 
     let w = height / rows;
 
@@ -88,7 +88,7 @@ function place(data, version, shape, mainColor, size, inputMask) {
     placeGlobal();
 
     let maskToApply;
-    if (inputMask == "auto") {
+    if (inputMask == 'auto') {
         let penaltyes = [];
         for (let i = 0; i < 8; i++) {
             formatBits(parseInt(i), data.correction);
@@ -215,11 +215,11 @@ function formatBits(mask, correction) {
 
 
 function finderPatterns(ioff, joff) {
-    const pattern = "0000000011111001000100100010010001001111100000000";
+    const pattern = '0000000011111001000100100010010001001111100000000';
 
     for (let j = 0; j < 7; j++) {
         for (let i = 0; i < 7; i++) {
-            if (pattern[index(i, j, 7)] == "1") {
+            if (pattern[index(i, j, 7)] == '1') {
                 matrix[index(i + ioff, j + joff, rows)].setVal(0);
                 matrix[index(i + ioff, j + joff, rows)].lock();
             } else {
@@ -232,10 +232,10 @@ function finderPatterns(ioff, joff) {
 
 
 function alignmentPatterns(x, y) {
-    const pattern = "1111110001101011000111111";
+    const pattern = '1111110001101011000111111';
     for (let j = 0; j < 5; j++) {
         for (let i = 0; i < 5; i++) {
-            if (pattern[index(i, j, 5)] == "0") {
+            if (pattern[index(i, j, 5)] == '0') {
                 matrix[index(i + x, j + y, rows)].setVal(0);
                 matrix[index(i + x, j + y, rows)].lock();
             } else {

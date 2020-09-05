@@ -8,7 +8,7 @@ function applyMask(num){
 }
 
 function mask(number) {
-    return window["mask" + number]();
+    return window['mask' + number]();
 }
 
 function mask0() {
@@ -18,7 +18,7 @@ function mask0() {
         if(matrix[i].editable){
             tempMatrix.push(parseInt(matrix[i].set));
         } else {
-            tempMatrix.push("x");
+            tempMatrix.push('x');
         }
     }
 
@@ -50,7 +50,7 @@ function mask1() {
         if(matrix[i].editable){
             tempMatrix.push(parseInt(matrix[i].set));
         } else {
-            tempMatrix.push("x");
+            tempMatrix.push('x');
         }
     }
 
@@ -81,7 +81,7 @@ function mask2() {
         if(matrix[i].editable){
             tempMatrix.push(parseInt(matrix[i].set));
         } else {
-            tempMatrix.push("x");
+            tempMatrix.push('x');
         }
     }
 
@@ -112,7 +112,7 @@ function mask3() {
         if(matrix[i].editable){
             tempMatrix.push(parseInt(matrix[i].set));
         } else {
-            tempMatrix.push("x");
+            tempMatrix.push('x');
         }
     }
 
@@ -143,7 +143,7 @@ function mask4() {
         if(matrix[i].editable){
             tempMatrix.push(parseInt(matrix[i].set));
         } else {
-            tempMatrix.push("x");
+            tempMatrix.push('x');
         }
     }
 
@@ -174,7 +174,7 @@ function mask5() {
         if(matrix[i].editable){
             tempMatrix.push(parseInt(matrix[i].set));
         } else {
-            tempMatrix.push("x");
+            tempMatrix.push('x');
         }
     }
 
@@ -205,7 +205,7 @@ function mask6() {
         if(matrix[i].editable){
             tempMatrix.push(parseInt(matrix[i].set));
         } else {
-            tempMatrix.push("x");
+            tempMatrix.push('x');
         }
     }
 
@@ -236,7 +236,7 @@ function mask7() {
         if(matrix[i].editable){
             tempMatrix.push(parseInt(matrix[i].set));
         } else {
-            tempMatrix.push("x");
+            tempMatrix.push('x');
         }
     }
 

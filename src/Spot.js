@@ -31,17 +31,17 @@ class Spot {
         stroke(background);
 
         switch (this.shape) {
-            case "square":
+            case 'square':
                 rect(this.x, this.y, this.w, this.w);
                 break;
-            case "circle":
+            case 'circle':
                 ellipse(this.x, this.y, this.w, this.w);
                 break;
 
-            case "rounded-square":
+            case 'rounded-square':
                 rect(this.x, this.y, this.w, this.w, 5);
                 break;
-            case "grid":
+            case 'grid':
                 strokeWeight(0.5);
                 stroke(255);
                 rect(this.x, this.y, this.w, this.w);
@@ -52,7 +52,6 @@ class Spot {
 
     checkOver(x, y) {
         if (x < this.x + this.w && x > this.x && y < this.y + this.w && y > this.y) {
-            console.log(this);
             return true;
         }
     }

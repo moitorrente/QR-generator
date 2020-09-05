@@ -3,11 +3,15 @@ class Message {
         this.original = original;
         this.version = version;
         this.correction = correction;
+        this.verCor = `${version}-${correction}`;
         this.modeDescription = this.determineEncoding();
         this.mode = MODE[this.modeDescription];
         this.count = this.determineCharCount();
-        this.nBits = 8 * CORRECTIONTABLE[`${version}-${correction}`];;
+        this.nBits = 8 * CORRECTIONTABLE[this.verCor];
         this.data;
+        this.terminator;
+        this.bitPadding;
+        this.bytePadding;
     }
 
     determineEncoding() {
@@ -33,27 +37,9 @@ class Message {
         return this.data;
     }
 
-    addCorrectionCodewords() {
-        const polynomial = calcPolynomial(this.data);
-        const correctionCodewords = polyDiv(polynomial.terms, polynomial.exps);
-        let binaryCodewords = "";
-        for (let i = 0; i < correctionCodewords.length; i++) {
-            binaryCodewords += toBin(correctionCodewords[i], 8);
-        }
-        return this.data = this.data + binaryCodewords;
-    }
-
-    addRemainder() {
-        let remainder = "";
-        for (let i = 0; i < REMAINDER[this.version]; i++) {
-            remainder += '0';
-        }
-        return this.data = this.data + remainder;
-    }
-
     encode() {
         let encodedMessage;
-        switch (this.mode) {
+        switch (this.modeDescription) {
             case 'numeric':
                 encodedMessage = numericEncoding(this.original);
                 break;
@@ -72,15 +58,44 @@ class Message {
     addPadding() {
         const MAXPADDING = 4;
         const STANDARD_PADDING = '1110110000010001';
+
         let padding = this.nBits;
 
-        if (this.nBits - this.data.length > MAXPADDING) padding = this.data.length + MAXPADDING;
+        if (this.nBits - this.data.length > MAXPADDING) {
+            padding = this.data.length + MAXPADDING;
+            this.terminator = MAXPADDING;
+        }
+
         this.data = this.data.padEnd(padding, '0');
 
-        if (this.data.length % 8 > 0) this.data.padEnd(this.data.length + 8 - this.data.length % 8, '0');
-        if (this.nBits > this.data.length) this.data = this.data.padEnd(this.nBits, STANDARD_PADDING);
+        this.terminator =  padding - this.data.length;
+
+        if (this.data.length % 8 > 0) {
+            this.data = this.data.padEnd(this.data.length + 8 - this.data.length % 8, '0');
+        }
+
+        if (this.nBits > this.data.length) {
+            this.data = this.data.padEnd(this.nBits, STANDARD_PADDING);
+        }
 
         return this.data;
     }
-}
 
+    addCorrectionCodewords() {
+        const polynomial = calcPolynomial(this.data);
+        const correctionCodewords = polyDiv(polynomial.terms, polynomial.exps, this.verCor);
+        let binaryCodewords = '';
+        for (let i = 0; i < correctionCodewords.length; i++) {
+            binaryCodewords += toBin(correctionCodewords[i], 8);
+        }
+        return this.data = this.data + binaryCodewords;
+    }
+
+    addRemainder() {
+        let remainder = '';
+        for (let i = 0; i < REMAINDER[this.version]; i++) {
+            remainder += '0';
+        }
+        return this.data = this.data + remainder;
+    }
+}

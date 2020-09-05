@@ -37,11 +37,11 @@ function isAlphanumeric(message) {
 function toBin(number, length) {
     let num = parseInt(number);
     let binaryNum = num.toString(2);
-    return binaryNum.padStart(length, "0");
+    return binaryNum.padStart(length, '0');
 }
 
 function toHex(str) {
-    var result = "";
+    var result = '';
     for (var i = 0; i < str.length; i++) {
         result += str.charCodeAt(i).toString(16);
     }

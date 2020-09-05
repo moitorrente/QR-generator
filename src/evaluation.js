@@ -35,12 +35,12 @@ function findLowestPenalty(penaltyes){
 
 function evaluatePatterns(data) {
     let penalty = 0;
-    const PATTERN_R = "10111010000";
-    const PATTERN_L = "00001011101";
+    const PATTERN_R = '10111010000';
+    const PATTERN_L = '00001011101';
 
     for (let j = 0; j < cols; j++) {
         for (let i = 0; i < rows - PATTERN_R.length + 1; i++) {
-            let temp = "";
+            let temp = '';
             for (let t = 0; t < PATTERN_R.length; t++) {
                 temp += data[index(i + t, j, rows)]
             }
@@ -52,7 +52,7 @@ function evaluatePatterns(data) {
 
     for (let i = 0; i < rows; i++) {
         for (let j = 0; j < cols - PATTERN_R.length + 1; j++) {
-            let temp = "";
+            let temp = '';
             for (let t = 0; t < PATTERN_R.length; t++) {
                 temp += data[index(i, j + t, rows)]
             }
