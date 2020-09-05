@@ -68,7 +68,7 @@ class Message {
 
         this.data = this.data.padEnd(padding, '0');
 
-        this.terminator =  padding - this.data.length;
+        this.terminator = padding - this.data.length;
 
         if (this.data.length % 8 > 0) {
             this.data = this.data.padEnd(this.data.length + 8 - this.data.length % 8, '0');
@@ -84,18 +84,19 @@ class Message {
     addCorrectionCodewords() {
         const polynomial = calcPolynomial(this.data);
         const correctionCodewords = polyDiv(polynomial.terms, polynomial.exps, this.verCor);
-        let binaryCodewords = '';
-        for (let i = 0; i < correctionCodewords.length; i++) {
-            binaryCodewords += toBin(correctionCodewords[i], 8);
+
+        const concatenate = (accumulator, item) => {
+            return accumulator + toBin(item, 8);
         }
+
+        const binaryCodewords = correctionCodewords.reduce(concatenate, '');
+
         return this.data = this.data + binaryCodewords;
     }
 
     addRemainder() {
         let remainder = '';
-        for (let i = 0; i < REMAINDER[this.version]; i++) {
-            remainder += '0';
-        }
+        remainder = remainder.padEnd(REMAINDER[this.version], '0');
         return this.data = this.data + remainder;
     }
 }

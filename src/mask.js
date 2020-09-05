@@ -1,27 +1,32 @@
 
-function applyMask(num){
+function applyMask(num) {
     let masked = mask(num);
-
-    for(let i = 0; i < matrix.length; i++){
-        matrix[i].set = masked[i];
-    }
+    matrix.forEach((x, index) => x.set = masked[index]);
 }
 
 function mask(number) {
-    return window['mask' + number]();
+    let tempMatrix = matrix.map(parseInMatrix);
+    tempMatrix = window['mask' + number](tempMatrix);
+    return tempMatrix = tempMatrix.map(parseOutMatrix);
 }
 
-function mask0() {
-    let tempMatrix = [];
-
-    for (let i = 0; i < matrix.length; i++) {
-        if(matrix[i].editable){
-            tempMatrix.push(parseInt(matrix[i].set));
-        } else {
-            tempMatrix.push('x');
-        }
+const parseInMatrix = (element) => {
+    let value = 'x'
+    if (element.editable) {
+        value = parseInt(element.set);
     }
+    return value;
+}
 
+const parseOutMatrix = (element, index) => {
+    let value = element;
+    if (element == 'x') {
+        value = parseInt(matrix[index].set);
+    }
+    return value;
+}
+
+function mask0(tempMatrix) {
     for (let j = 0; j < cols; j++) {
         for (let i = 0; i < rows; i++) {
             if ((i + j) % 2 == 0) {
@@ -33,27 +38,10 @@ function mask0() {
             }
         }
     }
-
-    for (let i = 0; i < tempMatrix.length; i++) {
-        if(tempMatrix[i] == 'x'){
-            tempMatrix[i] = parseInt(matrix[i].set);
-        }
-    }
-
     return tempMatrix;
 }
 
-
-function mask1() {
-    let tempMatrix = [];
-    for (let i = 0; i < matrix.length; i++) {
-        if(matrix[i].editable){
-            tempMatrix.push(parseInt(matrix[i].set));
-        } else {
-            tempMatrix.push('x');
-        }
-    }
-
+function mask1(tempMatrix) {
     for (let j = 0; j < cols; j++) {
         for (let i = 0; i < rows; i++) {
             if (j % 2 == 0) {
@@ -66,25 +54,10 @@ function mask1() {
         }
     }
 
-    for (let i = 0; i < tempMatrix.length; i++) {
-        if(tempMatrix[i] == 'x'){
-            tempMatrix[i] = parseInt(matrix[i].set);
-        }
-    }
     return tempMatrix;
 }
 
-function mask2() {
-    let tempMatrix = [];
-
-    for (let i = 0; i < matrix.length; i++) {
-        if(matrix[i].editable){
-            tempMatrix.push(parseInt(matrix[i].set));
-        } else {
-            tempMatrix.push('x');
-        }
-    }
-
+function mask2(tempMatrix) {
     for (let j = 0; j < cols; j++) {
         for (let i = 0; i < rows; i++) {
             if (i % 3 == 0) {
@@ -97,25 +70,10 @@ function mask2() {
         }
     }
 
-    for (let i = 0; i < tempMatrix.length; i++) {
-        if(tempMatrix[i] == 'x'){
-            tempMatrix[i] = parseInt(matrix[i].set);
-        }
-    }
     return tempMatrix;
 }
 
-function mask3() {
-    let tempMatrix = [];
-
-    for (let i = 0; i < matrix.length; i++) {
-        if(matrix[i].editable){
-            tempMatrix.push(parseInt(matrix[i].set));
-        } else {
-            tempMatrix.push('x');
-        }
-    }
-
+function mask3(tempMatrix) {
     for (let j = 0; j < cols; j++) {
         for (let i = 0; i < rows; i++) {
             if ((i + j) % 3 == 0) {
@@ -128,25 +86,10 @@ function mask3() {
         }
     }
 
-    for (let i = 0; i < tempMatrix.length; i++) {
-        if(tempMatrix[i] == 'x'){
-            tempMatrix[i] = parseInt(matrix[i].set);
-        }
-    }
     return tempMatrix;
 }
 
-function mask4() {
-    let tempMatrix = [];
-
-    for (let i = 0; i < matrix.length; i++) {
-        if(matrix[i].editable){
-            tempMatrix.push(parseInt(matrix[i].set));
-        } else {
-            tempMatrix.push('x');
-        }
-    }
-
+function mask4(tempMatrix) {
     for (let j = 0; j < cols; j++) {
         for (let i = 0; i < rows; i++) {
             if ((Math.floor(j / 2) + Math.floor(i / 3)) % 2 == 0) {
@@ -159,25 +102,10 @@ function mask4() {
         }
     }
 
-    for (let i = 0; i < tempMatrix.length; i++) {
-        if(tempMatrix[i] == 'x'){
-            tempMatrix[i] = parseInt(matrix[i].set);
-        }
-    }
     return tempMatrix;
 }
 
-function mask5() {
-    let tempMatrix = [];
-
-    for (let i = 0; i < matrix.length; i++) {
-        if(matrix[i].editable){
-            tempMatrix.push(parseInt(matrix[i].set));
-        } else {
-            tempMatrix.push('x');
-        }
-    }
-
+function mask5(tempMatrix) {
     for (let j = 0; j < cols; j++) {
         for (let i = 0; i < rows; i++) {
             if ((((i * j) % 2) + ((i * j) % 3)) == 0) {
@@ -190,25 +118,10 @@ function mask5() {
         }
     }
 
-    for (let i = 0; i < tempMatrix.length; i++) {
-        if(tempMatrix[i] == 'x'){
-            tempMatrix[i] = parseInt(matrix[i].set);
-        }
-    }
     return tempMatrix;
 }
 
-function mask6() {
-    let tempMatrix = [];
-
-    for (let i = 0; i < matrix.length; i++) {
-        if(matrix[i].editable){
-            tempMatrix.push(parseInt(matrix[i].set));
-        } else {
-            tempMatrix.push('x');
-        }
-    }
-
+function mask6(tempMatrix) {
     for (let j = 0; j < cols; j++) {
         for (let i = 0; i < rows; i++) {
             if ((((i * j) % 2) + ((i * j) % 3)) % 2 == 0) {
@@ -221,25 +134,10 @@ function mask6() {
         }
     }
 
-    for (let i = 0; i < tempMatrix.length; i++) {
-        if(tempMatrix[i] == 'x'){
-            tempMatrix[i] = parseInt(matrix[i].set);
-        }
-    }
     return tempMatrix;
 }
 
-function mask7() {
-    let tempMatrix = [];
-
-    for (let i = 0; i < matrix.length; i++) {
-        if(matrix[i].editable){
-            tempMatrix.push(parseInt(matrix[i].set));
-        } else {
-            tempMatrix.push('x');
-        }
-    }
-
+function mask7(tempMatrix) {
     for (let j = 0; j < cols; j++) {
         for (let i = 0; i < rows; i++) {
             if ((((i + j) % 2) + ((i * j) % 3)) % 2 == 0) {
@@ -252,10 +150,5 @@ function mask7() {
         }
     }
 
-    for (let i = 0; i < tempMatrix.length; i++) {
-        if(tempMatrix[i] == 'x'){
-            tempMatrix[i] = parseInt(matrix[i].set);
-        }
-    }
     return tempMatrix;
 }

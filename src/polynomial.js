@@ -66,13 +66,14 @@ function getGeneratorPolynomial(num) {
     return generatorPolynomial;
 }
 
+let aux;
+
 function polyDiv(terms, exps, vercor) {
     const iterations = terms.length - 1;
     const genPolynomial = getGeneratorPolynomial(ECCODEWORDS[vercor]);
 
     let alphaExp = Array.from(genPolynomial.alphaExp);
     let xExp = Array.from(genPolynomial.xExp);
-
     for (let i = 0; i < exps.length; i++) {
         exps[i] = exps[i] + ECCODEWORDS[vercor];
     }
