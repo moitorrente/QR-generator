@@ -1,77 +1,11 @@
 let _vercor = "";
-function encode(message, version, correction) {
+function encode(inputMessage, version, correction) {
     _vercor = `${version}-${correction}`;
 
-    
+    let message = new Message(inputMessage, version, correction);
+    message.buildMessage()
 
-    let encodedMsg = {
-        original: "",
-        mode: "",
-        modeDescription: "",
-        count: "",
-        data: "",
-        version: "",
-        correction: ""
-    }
-
-    let encoded;
-    let nBits = retrieveNBits();
-
-    encodedMsg.original = message;
-    encodedMsg.version = version;
-    encodedMsg.correction = correction;
-    mode = determineEncodig(message);
-
-    encodedMsg.modeDescription = mode;
-
-    encodedMsg.mode = MODE[mode];
-    encodedMsg.count = charCountIndicator(mode, message);
-
-    switch (mode) {
-        case 'numeric':
-            encoded = numericEncoding(message);
-            break;
-
-        case 'alphanumeric':
-            encoded = alphanumericEncoding(message);
-            break;
-
-        default:
-            encoded = byteEncoding(message);
-            break;
-    }
-
-    let data = encodedMsg.mode + encodedMsg.count + encoded.join("");
-
-    data = addPadding(data, nBits);
-
-    let polynomial = calcPolynomial(data);
-    let corrCodeWords = polyDiv(polynomial.terms, polynomial.exps);
-
-    let corrCodeBin = "";
-
-    for (let i = 0; i < corrCodeWords.length; i++) {
-        corrCodeBin += toBin(corrCodeWords[i], 8);
-    }
-
-    const remainderNum = REMAINDER[version];
-
-    encodedMsg.data = data + corrCodeBin + remainderBits(remainderNum);
-
-    return encodedMsg;
-}
-
-function remainderBits(num) {
-    let rem = "";
-    for (let i = 0; i < num; i++) {
-        rem += '0';
-    }
-    return rem;
-
-}
-
-function retrieveNBits() {
-    return 8 * CORRECTIONTABLE[_vercor];
+    return message;
 }
 
 function calcPolynomial(nums) {
@@ -133,7 +67,6 @@ function getGeneratorPolynomial(num) {
             generatorPolynomial.alphaExp = [0, 168, 223, 200, 104, 224, 234, 108, 180, 110, 190, 195, 147, 205, 27, 232, 201, 21, 43, 245, 87, 42, 195, 212, 119, 242, 37, 9, 123];
             break;
     }
-
 
     for (let i = num; i > 0; i--) {
         generatorPolynomial.xExp.push(i);
@@ -215,63 +148,6 @@ function multXOR(terms, exps, inAlphaExp, xExp) {
     return [terms, exps, alphaExp, xExp];
 }
 
-
-function addPadding(data, nBits) {
-    const MAXPADDING = 4;
-
-    let left = nBits - data.length;
-
-    if (left > 4) {
-        data = data.padEnd(data.length + 4, "0");
-    } else {
-        data = data.padEnd(data.length + left, "0");
-    }
-    
-    data = isMult8(data);
-    left = nBits - data.length;
-
-    if (left > 0) data = data.padEnd(data.length + left, "1110110000010001");
-
-    return data;
-}
-
-function isMult8(num) {
-    let rem = num.length % 8;
-    console.log("rem", rem);
-    if (rem > 0) return num.padEnd(num.length + 8 - rem, "0");
-    return num;
-}
-
-function determineEncodig(message) {
-    let mode;
-
-    if (isNumeric(message)) {
-        mode = "numeric";
-    } else if (isAlphanumeric(message)) {
-        mode = "alphanumeric"
-    } else {
-        mode = "byte";
-    }
-    return mode;
-}
-
-function isNumeric(message) {
-    return /^-?\d+$/.test(message);
-}
-
-function isAlphanumeric(message) {
-    for (const character of message) {
-        if (CONVERSIONTABLE[character] == undefined) return false;
-    }
-    return true;
-}
-
-function charCountIndicator(mode, text) {
-    let count = "";
-    count = toBin(text.length, LENGTH[mode])
-    return count;
-}
-
 function numericEncoding(num) {
     let chunks = [];
     let encoded = [];
@@ -346,18 +222,4 @@ function byteEncoding(text) {
         encoded.push(toBin(parseInt(toHex(character), 16), 8));
     }
     return encoded;
-}
-
-function toBin(number, length) {
-    let num = parseInt(number);
-    let binaryNum = num.toString(2);
-    return binaryNum.padStart(length, "0");
-}
-
-function toHex(str) {
-    var result = "";
-    for (var i = 0; i < str.length; i++) {
-        result += str.charCodeAt(i).toString(16);
-    }
-    return result;
 }
