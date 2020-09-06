@@ -95,7 +95,9 @@ function place(data, version, shape, mainColor, size, inputMask) {
             let maskedData = mask(parseInt(i));
             penaltyes.push(evaluateMask(maskedData));
         }
-        maskToApply = findLowestPenalty(penaltyes);
+
+        maskToApply = penaltyes.indexOf((penaltyes.reduce((acc, item) => acc > item ? acc = item : acc)));
+
     } else {
         maskToApply = parseInt(inputMask);
     }

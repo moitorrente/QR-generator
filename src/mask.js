@@ -1,29 +1,12 @@
-
 function applyMask(num) {
     let masked = mask(num);
     matrix.forEach((x, index) => x.set = masked[index]);
 }
 
 function mask(number) {
-    let tempMatrix = matrix.map(parseInMatrix);
+    let tempMatrix = matrix.map(x => x.editable ? parseInt(x.set) : 'x');
     tempMatrix = window['mask' + number](tempMatrix);
-    return tempMatrix = tempMatrix.map(parseOutMatrix);
-}
-
-const parseInMatrix = (element) => {
-    let value = 'x'
-    if (element.editable) {
-        value = parseInt(element.set);
-    }
-    return value;
-}
-
-const parseOutMatrix = (element, index) => {
-    let value = element;
-    if (element == 'x') {
-        value = parseInt(matrix[index].set);
-    }
-    return value;
+    return tempMatrix = tempMatrix.map((x, index) => x == 'x' ? parseInt(matrix[index].set) : x);
 }
 
 function mask0(tempMatrix) {

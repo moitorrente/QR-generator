@@ -2,15 +2,9 @@ function evaluateMask(data) {
     let rowsP = evaluateRows(data);
     let colsP = evaluateCols(data);
 
-    let penalty = 0;
+    let penalty = rowsP.reduce((acc, item) => acc + item, 0);
 
-    for (let i = 0; i < rowsP.length; i++) {
-        penalty += parseInt(rowsP[i]);
-    }
-
-    for (let i = 0; i < colsP.length; i++) {
-        penalty += parseInt(colsP[i]);
-    }
+    penalty = colsP.reduce((acc, item) => acc + item, penalty)
 
     penalty += parseInt(evaluateBoxes(data));
     penalty += parseInt(evaluatePatterns(data));
@@ -18,20 +12,6 @@ function evaluateMask(data) {
 
     return penalty;
 }
-
-function findLowestPenalty(penaltyes){
-    let min = penaltyes[0];
-    let ind = 0;
-
-    for (let i = 0; i < penaltyes.length; i++){
-        if(penaltyes[i] < min){
-            min = penaltyes[i];
-            ind = i;
-        }
-    }
-    return ind; 
-}
-
 
 function evaluatePatterns(data) {
     let penalty = 0;
@@ -61,7 +41,7 @@ function evaluatePatterns(data) {
             }
         }
     }
-    
+
     return penalty;
 }
 
@@ -139,14 +119,14 @@ function evaluateBoxes(data) {
 
 function evaluateRatio(data) {
     let dark = 0;
-    let total = cols * rows;
+    const total = cols * rows;
     for (let i = 0; i < data.length; i++) {
         if (data[i] == 1) {
             dark++;
         }
     }
 
-    let perc = Math.floor((dark / total) * 100);
+    const perc = Math.floor((dark / total) * 100);
     let percL = perc;
     let percH = perc;
 
@@ -158,8 +138,8 @@ function evaluateRatio(data) {
         percH++;
     }
 
-    let tempH = Math.abs(percH - 50) / 5;
-    let tempL = Math.abs(percL - 50) / 5;
+    const tempH = Math.abs(percH - 50) / 5;
+    const tempL = Math.abs(percL - 50) / 5;
     let penalty = Math.min(tempH, tempL) * 10;
 
     return penalty;
