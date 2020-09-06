@@ -66,22 +66,21 @@ function updateMatrix(version) {
     }
 }
 
+
+function setAlignment(version) {
+    if(version > 1){
+        let position = 8 + 4 * version;
+        alignmentPatterns(position, position);
+    }
+}
+
 function place(data, version, shape, mainColor, size, inputMask) {
     updateMatrix(version);
     restart(size);
     inData = Array.from(data.data)
 
-    switch (version) {
-        case '2':
-            alignmentPatterns(16, 16);
-            break;
-        case '3':
-            alignmentPatterns(20, 20);
-            break;
-        case '4':
-            alignmentPatterns(24, 24);
-            break;
-    }
+
+    setAlignment(version);
 
     finderPatterns(0, 0);
     finderPatterns(rows - 7, 0);

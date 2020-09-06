@@ -16,7 +16,9 @@ const REMAINDER = {
     '1': 0,
     '2': 7,
     '3': 7,
-    '4': 7
+    '4': 7,
+    '5': 7,
+    '6': 7
 }
 
 const CORRECTIONTABLE = {
@@ -36,7 +38,17 @@ const CORRECTIONTABLE = {
     '4-L': 80,
     '4-M': 64,
     '4-Q': 48,
-    '4-H': 36
+    '4-H': 36,
+
+    '5-L': 108,
+    '5-M': 86,
+    '5-Q': 62,
+    '5-H': 46,
+
+    '6-L': 136,
+    '6-M': 108,
+    '6-Q': 76,
+    '6-H': 60,
 }
 
 const ECCODEWORDS = {
@@ -56,7 +68,17 @@ const ECCODEWORDS = {
     '4-L': 20,
     '4-M': 18,
     '4-Q': 26,
-    '4-H': 16
+    '4-H': 16,
+
+    '5-L': 26,
+    '5-M': 24,
+    '5-Q': 18,
+    '5-H': 22,
+
+    '6-L': 18,
+    '6-M': 16,
+    '6-Q': 24,
+    '6-H': 28
 }
 
 const ALPHAEXP = {
@@ -211,6 +233,53 @@ const CAPACITIES = {
             numeric: 82,
             alphanumeric: 50,
             byte: 34
+        }
+    },
+
+
+    5: {
+        L: {
+            numeric: 255,
+            alphanumeric: 154,
+            byte: 106
+        },
+        M: {
+            numeric: 202,
+            alphanumeric: 122,
+            byte: 84
+        },
+        Q: {
+            numeric: 144,
+            alphanumeric: 87,
+            byte: 60
+        },
+        H: {
+            numeric: 106,
+            alphanumeric: 64,
+            byte: 44
+        }
+    },
+
+    6: {
+        L: {
+            numeric: 322,
+            alphanumeric: 195,
+            byte: 134
+        },
+        M: {
+            numeric: 255,
+            alphanumeric: 154,
+            byte: 106
+        },
+        Q: {
+            numeric: 178,
+            alphanumeric: 108,
+            byte: 74
+        },
+        H: {
+            numeric: 139,
+            alphanumeric: 84,
+            byte: 58
         }
     }
 }
