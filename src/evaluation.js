@@ -3,9 +3,7 @@ function evaluateMask(data) {
     let colsP = evaluateCols(data);
 
     let penalty = rowsP.reduce((acc, item) => acc + item, 0);
-
     penalty = colsP.reduce((acc, item) => acc + item, penalty)
-
     penalty += parseInt(evaluateBoxes(data));
     penalty += parseInt(evaluatePatterns(data));
     penalty += parseInt(evaluateRatio(data));
@@ -41,7 +39,6 @@ function evaluatePatterns(data) {
             }
         }
     }
-
     return penalty;
 }
 
@@ -70,7 +67,6 @@ function evaluateRows(data) {
         penalty = 0;
         counter = 0;
     }
-
     return rowPenalty;
 }
 
@@ -88,7 +84,6 @@ function evaluateCols(data) {
 
                 } else if (counter > 5) {
                     penalty++;
-
                 }
             } else {
                 counter = 1;
@@ -99,7 +94,6 @@ function evaluateCols(data) {
         penalty = 0;
         counter = 0;
     }
-
     return columnPenalty;
 }
 
@@ -118,15 +112,13 @@ function evaluateBoxes(data) {
 }
 
 function evaluateRatio(data) {
-    let dark = 0;
     const total = cols * rows;
-    for (let i = 0; i < data.length; i++) {
-        if (data[i] == 1) {
-            dark++;
-        }
-    }
-
+    const dark = data.reduce((acc, items) => {
+        items == 1 ? acc++ : acc, data[0];
+       return acc;
+    });
     const perc = Math.floor((dark / total) * 100);
+
     let percL = perc;
     let percH = perc;
 

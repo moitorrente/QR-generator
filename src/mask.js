@@ -68,7 +68,6 @@ function mask3(tempMatrix) {
             }
         }
     }
-
     return tempMatrix;
 }
 
@@ -84,7 +83,6 @@ function mask4(tempMatrix) {
             }
         }
     }
-
     return tempMatrix;
 }
 
@@ -100,7 +98,6 @@ function mask5(tempMatrix) {
             }
         }
     }
-
     return tempMatrix;
 }
 
@@ -116,7 +113,6 @@ function mask6(tempMatrix) {
             }
         }
     }
-
     return tempMatrix;
 }
 
@@ -132,6 +128,5 @@ function mask7(tempMatrix) {
             }
         }
     }
-
     return tempMatrix;
 }

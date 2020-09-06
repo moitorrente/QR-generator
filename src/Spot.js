@@ -5,7 +5,7 @@ class Spot {
         this.w = w;
         this.set = set;
         this.shape = shape;
-        this.mainColor;
+        this.mainColor = 0;
         this.editable = true;
         this.setted = false;
     }
@@ -13,18 +13,19 @@ class Spot {
     show() {
         let background;
 
-        if (this.set == 1) {
-            background = this.mainColor;
-        } else if (this.set == 0) {
-            background = 255;
-
-        } else if (this.set == 2) {
-            background = [0, 0, 255];
-        } else if (this.set == 3){
-            background = [255, 0, 0];
-        }
-        else {
-            background = 120;
+        switch (this.set) {
+            case 0:
+                background = 255;
+                break;
+            case 1:
+                background = this.mainColor;
+                break;
+            case 3:
+                background = [0, 0, 255];
+                break;
+            default:
+                background = 120;
+                break;
         }
 
         fill(background);
@@ -37,7 +38,6 @@ class Spot {
             case 'circle':
                 ellipse(this.x, this.y, this.w, this.w);
                 break;
-
             case 'rounded-square':
                 rect(this.x, this.y, this.w, this.w, 5);
                 break;
@@ -71,9 +71,10 @@ class Spot {
     }
 
     setVal(value) {
+
         if (this.editable) {
-            this.set = value;
-            if(this.set == 1 || this.set == 0){
+            this.set = value.toString();
+            if (this.set == 1 || this.set == 0) {
                 this.setted = true;
             }
         }
@@ -87,5 +88,4 @@ class Spot {
     unlock() {
         this.editable = true;
     }
-
 }

@@ -84,12 +84,7 @@ class Message {
     addCorrectionCodewords() {
         const polynomial = calcPolynomial(this.data);
         const correctionCodewords = polyDiv(polynomial.terms, polynomial.exps, this.verCor);
-
-        const concatenate = (accumulator, item) => {
-            return accumulator + toBin(item, 8);
-        }
-
-        const binaryCodewords = correctionCodewords.reduce(concatenate, '');
+        const binaryCodewords = correctionCodewords.reduce((acc, item) => acc + toBin(item, 8), '');
 
         return this.data = this.data + binaryCodewords;
     }

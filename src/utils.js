@@ -7,7 +7,6 @@ function mouseClicked() {
     let y = mouseY;
     for (let i = 0; i < matrix.length; i++) {
         if (matrix[i].checkOver(x, y)) {
-
             console.log(matrix[index(x, y, rows)]);
             console.log(i)
             //   if (matrix[i].set == 1) {
@@ -41,9 +40,11 @@ function toBin(number, length) {
 }
 
 function toHex(str) {
-    var result = '';
-    for (var i = 0; i < str.length; i++) {
+    let result = '';
+
+    for (let i = 0; i < str.length; i++) {
         result += str.charCodeAt(i).toString(16);
     }
+
     return result;
 }
