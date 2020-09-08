@@ -1,12 +1,31 @@
-function applyMask(num) {
-    let masked = mask(num);
-    matrix.forEach((x, index) => x.set = masked[index]);
-}
 
 function mask(number) {
     let tempMatrix = matrix.map(x => x.editable ? parseInt(x.set) : 'x');
     tempMatrix = window['mask' + number](tempMatrix);
     return tempMatrix = tempMatrix.map((x, index) => x == 'x' ? parseInt(matrix[index].set) : x);
+}
+
+function determineMask(inputMask, correction){
+    let maskToApply;
+    if (inputMask == 'auto') {
+        let penaltyes = [];
+        for (let i = 0; i < 8; i++) {
+            formatBits(parseInt(i), correction);
+            let maskedData = mask(parseInt(i));
+            penaltyes.push(evaluateMask(maskedData));
+        }
+    
+        maskToApply = penaltyes.indexOf((penaltyes.reduce((acc, item) => acc > item ? acc = item : acc)));
+    
+    } else {
+        maskToApply = parseInt(inputMask);
+    }
+    return maskToApply;
+}
+
+function applyMask(num) {
+    let masked = mask(num);
+    matrix.forEach((x, index) => x.set = masked[index]);
 }
 
 function mask0(tempMatrix) {

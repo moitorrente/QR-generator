@@ -92,20 +92,7 @@ function place(data, version, shape, mainColor, size, inputMask) {
 
     placeGlobal();
 
-    let maskToApply;
-    if (inputMask == 'auto') {
-        let penaltyes = [];
-        for (let i = 0; i < 8; i++) {
-            formatBits(parseInt(i), data.correction);
-            let maskedData = mask(parseInt(i));
-            penaltyes.push(evaluateMask(maskedData));
-        }
-
-        maskToApply = penaltyes.indexOf((penaltyes.reduce((acc, item) => acc > item ? acc = item : acc)));
-
-    } else {
-        maskToApply = parseInt(inputMask);
-    }
+    let maskToApply = determineMask(inputMask, data.correction);
 
     formatBits(parseInt(maskToApply), data.correction);
     applyMask(maskToApply);
