@@ -5,6 +5,7 @@ const NOTSET = 99;
 let x = rows - 1;
 let y = cols - 1;
 let inData = [];
+let factor = 0.8;
 
 const devmode = document.getElementById('devmode');
 
@@ -23,6 +24,10 @@ function setup() {
 }
 
 function draw() {
+    translate(width/2, height /2)
+    scale(factor)
+    translate(-width/2, -height /2)
+
     background(255);
     rectMode(CORNER);
     ellipseMode(CORNER);
@@ -74,7 +79,7 @@ function setAlignment(version) {
     }
 }
 
-function place(data, version, shape, mainColor, size, inputMask) {
+function place(data, version, shape, mainColor, secondaryColor, size, inputMask) {
     updateMatrix(version);
     restart(size);
     inData = Array.from(data.data)
@@ -97,11 +102,22 @@ function place(data, version, shape, mainColor, size, inputMask) {
     formatBits(parseInt(maskToApply), data.correction);
     applyMask(maskToApply);
 
+    matrix.forEach(x => x.updateShape(shape))
 
-    for (let i = 0; i < matrix.length; i++) {
-        matrix[i].updateShape(shape);
-        matrix[i].updateColor(mainColor);
-    }
+    matrix.forEach(x => x.updateColor(mainColor, secondaryColor));
+
+    // for (let i = 0; i < matrix.length; i++) {
+    //     matrix[i].updateShape(shape);
+    //     matrix[i].updateColor(mainColor, secondaryColor);
+    // }
 
     return maskToApply;
+}
+
+function updateShape(shape){
+    matrix.forEach(x => x.updateShape(shape))
+}
+
+function updateColor(mainColor, secondaryColor){
+    matrix.forEach(x => x.updateColor(mainColor, secondaryColor));
 }

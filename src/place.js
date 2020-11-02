@@ -174,7 +174,6 @@ function formatBits(mask, correction) {
 
 function finderPatterns(ioff, joff) {
     const PATTERN = '0000000011111001000100100010010001001111100000000';
-
     for (let j = 0; j < 7; j++) {
         for (let i = 0; i < 7; i++) {
             if (PATTERN[index(i, j, 7)] == '1') {
@@ -187,7 +186,6 @@ function finderPatterns(ioff, joff) {
         }
     }
 }
-
 
 function alignmentPatterns(x, y) {
     const PATTERN = '1111110001101011000111111';

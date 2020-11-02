@@ -1,3 +1,5 @@
+const URLTEXT = ['http://', 'https://'];
+
 const MODE = {
     numeric: '0001',
     alphanumeric: '0010',

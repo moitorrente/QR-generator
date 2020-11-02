@@ -12,6 +12,7 @@
     <script defer src='./src/script.js'></script>
     <script defer src='./src/Spot.js'></script>
     <script defer src='./src/Message.js'></script>
+    <script defer src='./src/Parser.js'></script>
     <script defer src='./src/mask.js'></script>
     <script defer src='./src/place.js'></script>
     <script defer src='./src/evaluation.js'></script>
@@ -37,18 +38,131 @@
             <div class="row">
                 <div class="col-md-4">
                     <div>
-                        <input type="checkbox" checked data-toggle="toggle" id="devmode">devmode</input>
-                        <button type="button" class="btn btn-primary" onclick="placeGlobal();">Place</button>
-
                         <div id="inputArea" class="p-3 border rounded">
                             <h6 class="card-subtitle mb-2 text-muted">Parámetros entrada</h6>
-                            <div class="input-group mb-3">
+                            <div class="form-group">
+                                <select class="form-control" id="tablinkGroup">
+                                    <option id="tablinkText">Texto</option>
+                                    <option id="tablinkURL">URL</option>
+                                    <option id="tablinkSMS">SMS</option>
+                                    <option id="tablinkPhone">Teléfono</option>
+                                    <option id="tablinkGeo">Geo</option>
+                                    <option id="tablinkMail">Mail</option>
+                                    <option id="tablinkContact">Contacto</option>
+                                    <option id="tablinkWifi">Wifi</option>
+                                    <option id="tablinkEvent">Evento</option>
+                                </select>
+                            </div>
+                            <div class="input-group mb-3 tabContent" id="containerText">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputChars">
+                                    <span class="input-group-text" id="inputText">
                                         Datos a convertir <br>
                                     </span>
                                 </div>
-                                <textarea class="form-control" aria-label="Datos" id="data"></textarea>
+                                <textarea class="form-control" aria-label="Datos" id="dataText"></textarea>
+                            </div>
+                            <div class="input-group mb-3 tabContent" id="containerURL">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputURL">
+                                        URL a convertir<br>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" aria-label="url" id="dataURL"
+                                    aria-describedby="basic-addon1">
+                            </div>
+                            <div class="input-group mb-3 tabContent" id="containerSMS">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputSMSPhone">
+                                            Teléfono<br>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="phone" id="dataSMSPhone"
+                                        aria-describedby="basic-addon1">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputSMSMessage">
+                                            SMS<br>
+                                        </span>
+                                    </div>
+                                    <textarea class="form-control" aria-label="Datos" id="dataSMSMessage"></textarea>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3 tabContent" id="containerPhone">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputPhone">
+                                        Teléfono<br>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" aria-label="phone" id="dataPhone"
+                                    aria-describedby="basic-addon1">
+                            </div>
+                            <div class="input-group mb-3 tabContent" id="containerGeo">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGeoLatitude">
+                                            Latitude<br>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="latitude" id="dataGeoLatitude"
+                                        aria-describedby="basic-addon1">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGeoLongitude">
+                                            Longitude<br>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="longitude" id="dataGeoLongitude"
+                                        aria-describedby="basic-addon1">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGeoQuery">
+                                            Query<br>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="query" id="dataGeoQuery"
+                                        aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+                            <div class="input-group mb-3 tabContent" id="containerMail">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputMail">
+                                        Mail<br>
+                                    </span>
+                                </div>
+                                <textarea class="form-control" aria-label="Datos" id="dataMail"></textarea>
+                            </div>
+                            <div class="input-group mb-3 tabContent" id="containerContact">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputContactName">
+                                            Nombre<br>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="latitude" id="dataContactName"
+                                        aria-describedby="basic-addon1">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGeoLongitude">
+                                            Primer apellido<br>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="longitude" id="dataContactFirst"
+                                        aria-describedby="basic-addon1">
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGeoQuery">
+                                            Segundo apellido<br>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control" aria-label="query" id="dataContactSecond"
+                                        aria-describedby="basic-addon1">
+                                </div>
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -75,10 +189,8 @@
                                 </select>
                             </div>
                         </div>
-
                         <div id="formatArea" class="p-3 border rounded mt-3 mb-3">
                             <h6 class="card-subtitle mb-2 text-muted">Formato QR</h6>
-
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="maskNum">Máscara</label>
@@ -95,7 +207,6 @@
                                     <option value=7>7</option>
                                 </select>
                             </div>
-
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="shape">Forma</label>
@@ -113,6 +224,12 @@
                                     <label class="input-group-text" for="mainColor">Color</label>
                                 </div>
                                 <input class="form-control" type="color" value="#000000" id="mainColor">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="secondaryColor">Color fondo</label>
+                                </div>
+                                <input class="form-control" type="color" value="#FFFFFF" id="secondaryColor">
                             </div>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
@@ -145,16 +262,13 @@
                             </form>
                         </div>
                     </div>
-
                 </div>
                 <div class="col-md-4">
                     <div class="row d-flex justify-content-center" id="canvas">
                         <script defer src="./src/sketch.js"></script>
                     </div>
-
                 </div>
                 <div class="col-md-4">
-
                     <div class="row d-flex justify-content-center">
                         <div class="card m-3" style="width: 18rem;">
                             <div class="card-header">
@@ -166,13 +280,11 @@
                                 <li class="list-group-item" id="versionText">Versión:</li>
                                 <li class="list-group-item" id="maskText">Máscara:</li>
                             </ul>
+                            <textarea class="form-control" aria-label="Datos" id="parsedData"></textarea>
                         </div>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
     </body>
 </body>

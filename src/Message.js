@@ -26,17 +26,23 @@ class Message {
     }
 
     determineCharCount() {
-        return this.count = toBin(this.original.length, LENGTH[this.modeDescription])
+        let chunks = makeChunks(this.original, 1);
+        const length = chunks.reduce(function (acc, item) {
+            isEmoji(item) ? acc += 4 : acc++;
+            return acc;
+        }, 0)
+
+        return this.count = toBin(length, LENGTH[this.modeDescription])
     }
 
     buildMessage() {
         this.encode();
         this.addPadding();
-        this.breakMessage()
-        //this.addCorrectionCodewords();
+        this.interleaveMessage();
         this.addRemainder();
 
-        console.log(this.data.length);
+        //console.log(this.data.length);
+        //console.log(this);
         return this.data;
     }
 
@@ -67,11 +73,13 @@ class Message {
         if (this.nBits - this.data.length > MAXPADDING) {
             padding = this.data.length + MAXPADDING;
             this.terminator = MAXPADDING;
+        } else {
+            this.terminator = padding - this.data.length;
         }
 
         this.data = this.data.padEnd(padding, '0');
 
-        this.terminator = padding - this.data.length;
+
 
         if (this.data.length % 8 > 0) {
             this.data = this.data.padEnd(this.data.length + 8 - this.data.length % 8, '0');
@@ -84,21 +92,11 @@ class Message {
         return this.data;
     }
 
-    //este se quedará 
     createCorrectionCodewords(block) {
         const polynomial = calcPolynomial(block);
         const correctionCodewords = polyDiv(polynomial.terms, polynomial.exps, this.verCor);
         const binaryCodewords = correctionCodewords.map(item => toBin(item, 8), '');
         return binaryCodewords;
-    }
-
-    //este desaparecerá
-    addCorrectionCodewords() {
-        const polynomial = calcPolynomial(this.data);
-        const correctionCodewords = polyDiv(polynomial.terms, polynomial.exps, this.verCor);
-        const binaryCodewords = correctionCodewords.reduce((acc, item) => acc + toBin(item, 8), '');
-
-        return this.data = this.data + binaryCodewords;
     }
 
     addRemainder() {
@@ -107,9 +105,7 @@ class Message {
         return this.data = this.data + remainder;
     }
 
-    breakMessage(data, splitter) {
-        //const DATA = '0100001101010101010001101000011001010111001001100101010111000010011101110011001000000110000100100000011001100111001001101111011011110110010000100000011101110110100001101111001000000111001001100101011000010110110001101100011110010010000001101011011011100110111101110111011100110010000001110111011010000110010101110010011001010010000001101000011010010111001100100000011101000110111101110111011001010110110000100000011010010111001100101110000011101100000100011110110000010001111011000001000111101100';
-        // const SPLITTER = {
+    // const SPLITTER = {
         //     0: 15,
         //     1: 15,
         //     2: 16,
@@ -127,42 +123,28 @@ class Message {
         //     0: CORRECTIONTABLE[this.verCor]
         // }
 
+    interleaveMessage() {
         const SPLITTER = this.createSplitter();
-
-        console.log('splitter', SPLITTER);
-
         let blockedData = [];
         let blocks = [];
-        let corrections = [];
-        let newData = this.data.split('');
+        let newData = [];
+
+        this.originalDataEncoded = this.data;
 
         for (let i = 0; i < Object.keys(SPLITTER).length; i++) {
-            const block = newData.splice(0, SPLITTER[i] * 8).join('');
+            //const block = newData.splice(0, SPLITTER[i] * 8).join('');
+            const block = this.data.split('').splice(0, SPLITTER[i] * 8).join('');
             blocks.push(block);
             blockedData.push(this.createCodewords((block)));
         }
 
-        for (let i = 0; i < blocks.length; i++) {
-            // for (let j = 0; j < blockedData[i].length; j++) {
-            //     console.log("decimal " + i, parseInt(blockedData[i][j], 2), blockedData[i][j]);
-            // }
-
-
-            corrections.push(this.createCorrectionCodewords(blocks[i]));
-        }
-
-        //console.log(blocks);
-        //console.log(blockedData[3]);
-        //console.log(corrections);
-
-
-        let newD = [];
+        let corrections = blocks.map(x => this.createCorrectionCodewords(x));
 
         //aqui tiene que ir el splitter más grande en lugar de 99
         for (let j = 0; j < 99; j++) {
             for (let i = 0; i < Object.keys(SPLITTER).length; i++) {
                 if (blockedData[i][j]) {
-                    newD.push(blockedData[i][j]);
+                    newData.push(blockedData[i][j]);
                 }
             }
         }
@@ -170,22 +152,16 @@ class Message {
         for (let j = 0; j < ECCODEWORDS[this.verCor]; j++) {
             for (let i = 0; i < Object.keys(SPLITTER).length; i++) {
                 if (corrections[i][j]) {
-                    newD.push(corrections[i][j]);
+                    newData.push(corrections[i][j]);
                 }
             }
         }
-
-        //console.log(newD);
-
-        this.data = newD.join('')
-
-
+        this.data = newData.join('')
     }
 
     createCodewords(array) {
         let tempArray = Array.from(array);
         let codewords = [];
-
         while (tempArray.length > 0) {
             codewords.push(tempArray.splice(0, 8).join(''))
         }

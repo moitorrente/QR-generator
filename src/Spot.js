@@ -6,6 +6,7 @@ class Spot {
         this.set = set;
         this.shape = shape;
         this.mainColor = 0;
+        this.secondaryColor = 255;
         this.editable = true;
         this.setted = false;
     }
@@ -15,7 +16,7 @@ class Spot {
 
         switch (this.set) {
             case 0:
-                background = 255;
+                background = this.secondaryColor;
                 break;
             case 1:
                 background = this.mainColor;
@@ -27,7 +28,7 @@ class Spot {
                 background = 120;
                 break;
         }
-
+        
         fill(background);
         stroke(background);
 
@@ -39,7 +40,7 @@ class Spot {
                 ellipse(this.x, this.y, this.w, this.w);
                 break;
             case 'rounded-square':
-                rect(this.x, this.y, this.w, this.w, 5);
+                rect(this.x, this.y, this.w, this.w, 15, 10, 0);
                 break;
             case 'grid':
                 strokeWeight(0.5);
@@ -47,21 +48,19 @@ class Spot {
                 rect(this.x, this.y, this.w, this.w);
                 break;
         }
-
     }
 
     checkOver(x, y) {
-        if (x < this.x + this.w && x > this.x && y < this.y + this.w && y > this.y) {
-            return true;
-        }
+        return (x < this.x + this.w && x > this.x && y < this.y + this.w && y > this.y); 
     }
 
     updateShape(shape) {
         this.shape = shape;
     }
 
-    updateColor(mainColor) {
+    updateColor(mainColor, secondaryColor) {
         this.mainColor = mainColor;
+        this.secondaryColor = secondaryColor;
     }
 
     updateWidth(w) {
@@ -71,7 +70,6 @@ class Spot {
     }
 
     setVal(value) {
-
         if (this.editable) {
             this.set = value.toString();
             if (this.set == 1 || this.set == 0) {

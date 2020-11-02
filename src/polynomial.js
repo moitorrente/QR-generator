@@ -26,9 +26,6 @@ function getGeneratorPolynomial(num) {
         alphaExp: [],
         xExp: []
     }
-
-    console.log("num?",num)
-    console.log("ALPHAEXP?",ALPHAEXP[num])
     generatorPolynomial.alphaExp = ALPHAEXP[num];
 
     for (let i = num; i > 0; i--) {
